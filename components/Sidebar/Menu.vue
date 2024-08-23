@@ -32,7 +32,7 @@
 const items = ref([
   {
     title: "Overview",
-    path: "/",
+    path: "/overview",
     icon: "material-symbols:overview-key-outline",
   },
   {

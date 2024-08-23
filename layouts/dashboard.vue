@@ -4,7 +4,7 @@
       <Sidebar />
     </div>
     <div
-      class="p-6 w-full overflow-y-auto h-screen bg-black"
+      class="p-6 w-full overflow-y-auto h-screen"
     >
       <slot />
     </div>

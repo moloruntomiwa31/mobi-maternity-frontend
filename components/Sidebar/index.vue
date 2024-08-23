@@ -77,17 +77,17 @@
     {
       title: "Help Center",
       icon: "icon-park-solid:helpcenter",
-      to: "/",
+      to: "/overview",
     },
     {
       title: "Contact",
       icon: "teenyicons:contact-outline",
-      to: "/",
+      to: "/overview",
     },
     {
       title: "Logout",
       icon: "ic:baseline-logout",
-      to: "/",
+      to: "/overview",
     },
   ];
   </script>

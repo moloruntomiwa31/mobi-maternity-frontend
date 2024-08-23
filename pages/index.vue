@@ -1,55 +1,78 @@
 <template>
-  <div class="grid gap-4">
-    <header class="flex items-center justify-between">
-      <div class="grow">
-        <h1>Hello, Jenny!</h1>
-        <p class="text-sm">You'll receive details about your pregnancy here.</p>
-      </div>
-      <div class="flex items-center justify-between">
-        <Icon name="ic:outline-search" color="black" size="20" />
-        <div class="relative">
-          <div
-            class="w-1 h-1 rounded-full bg-red-600 absolute top-0 right-0"
-          ></div>
-          <Icon
-            name="clarity:notification-line"
-            color="black"
-            size="20"
-            class="ml-4"
-          />
-        </div>
-      </div>
-      <UserItem />
-    </header>
-
-    <main class="grid gap-4">
-      <!-- <div class="grid gap-4 grid-cols-1 md:grid-cols-3 xl:grid-cols-4"></div> -->
-      <div class="w-full">
-        <Calendar
-          v-model="value"
-          :weekday-format="'short'"
-          class="rounded-md border w-full"
-        />
-      </div>
-    </main>
-
-    <footer></footer>
+  <div class="grid gap-12 place-items-center">
+    <transition name="slide" mode="out-in">
+      <component :is="components[currentIndex].component" :key="currentIndex" />
+    </transition>
+    <div class="flex items-center gap-4">
+      <Button @click="handleSkip" class="bg-pink-600 hover:bg-pink-400"
+        >Skip</Button
+      >
+      <Pagination :current="currentIndex" :total="components.length" />
+      <Button
+        @click="handleNext"
+        class="bg-pink-600 hover:bg-pink-400"
+        :disabled="currentIndex === components.length - 1"
+        >Next</Button
+      >
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  layout: "dashboard",
+  layout: "onboarding",
 });
-import { type Ref, ref } from "vue";
-import {
-  type DateValue,
-  getLocalTimeZone,
-  today,
-} from "@internationalized/date";
-import { Calendar } from "@/components/ui/calendar";
-
-const value = ref(today(getLocalTimeZone())) as Ref<DateValue>;
+import { Button } from "@/components/ui/button";
+const components = [
+  {
+    name: "welcome",
+    title: "Welcome",
+    component: defineAsyncComponent(
+      () => import("@/components/Home/Welcome.vue")
+    ),
+  },
+  {
+    name: "consultation",
+    title: "Consultation",
+    component: defineAsyncComponent(
+      () => import("@/components/Home/Consultations.vue")
+    ),
+  },
+  {
+    name: "locationtracking",
+    title: "Location Tracking",
+    component: defineAsyncComponent(
+      () => import("@/components/Home/LocationTracking.vue")
+    ),
+  },
+];
+const currentIndex = ref(0);
+const currentComponent = computed(
+  () => components[currentIndex.value].component
+);
+const handleNext = () => {
+  if (currentIndex.value < components.length - 1) {
+    currentIndex.value++;
+  }
+};
+const handleSkip = () => {
+  navigateTo("/login");
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>
