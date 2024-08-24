@@ -41,7 +41,7 @@
             <p>Your baby is like the size of a pear</p>
           </div>
           <div class="grid grid-cols-2 gap-4">
-            <Card :cards class="border-0 shadow-none p-0" />
+            <BabyDetailsCard :cards class="border-0 shadow-none p-0" />
           </div>
         </div>
         <!-- other -->
@@ -50,7 +50,7 @@
             <h2 class="text-lg font-semibold">Daily Tip😜</h2>
             <p>{{ dailyTip }}</p>
           </div>
-          <OverviewShopping :itemsList /> 
+          <OverviewShopping /> 
         </div>
       </div>
     </main>

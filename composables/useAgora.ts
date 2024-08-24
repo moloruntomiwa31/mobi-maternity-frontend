@@ -1,6 +1,3 @@
-import { ref, reactive } from "vue";
-import { useNuxtApp } from "#app";
-
 export function useAgora() {
   const { $agora } = useNuxtApp();
   const client = $agora.createClient({ mode: "rtc", codec: "vp8" });

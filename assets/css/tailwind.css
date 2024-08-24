@@ -76,6 +76,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* scroll-padding-top: 4rem;  */
   }
   h1 {
     @apply text-2xl lg:text-3xl font-extrabold

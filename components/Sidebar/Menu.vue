@@ -41,6 +41,11 @@ const items = ref([
     icon: "vaadin:doctor",
   },
   {
+    title: "AI Assistant",
+    path: "/assistant",
+    icon: "game-icons:doctor-face",
+  },
+  {
     title: "Geo-location Tracking",
     path: "/locate",
     icon: "entypo:location",

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="text-black w-full min-h-screen flex justify-center items-center"
-  >
+  <div class="text-black w-full min-h-screen flex justify-center items-center">
     <div class="max-w-md w-full">
       <div class="flex justify-center items-center mb-8">
         <Logo class="mr-4" />
@@ -15,9 +13,12 @@
           v-model="field.value"
           :placeholder="field.placeholder"
           class="w-full"
+          required
         />
       </div>
-      <Button class="bg-pink-500 hover:bg-pink-400 w-full">Login</Button>
+      <Button class="bg-pink-500 hover:bg-pink-400 w-full" @click="handleLogin"
+        >Login</Button
+      >
       <span class="block text-center mt-4">
         Don't have an account?
         <NuxtLink to="/register" class="text-pink-500 hover:underline"
@@ -32,6 +33,9 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/toast/use-toast";
+const { toast } = useToast();
+const { login } = useAuth();
 
 interface Field {
   id: string;
@@ -43,11 +47,11 @@ interface Field {
 
 const fields = ref<Field[]>([
   {
-    id: "email",
-    label: "Email Address",
-    type: "email",
+    id: "text",
+    label: "Username",
+    type: "text",
     value: "",
-    placeholder: "Enter your email",
+    placeholder: "Enter your username",
   },
   {
     id: "password",
@@ -57,6 +61,15 @@ const fields = ref<Field[]>([
     placeholder: "Enter your password",
   },
 ]);
+
+const handleLogin = async () => {
+  const formData = {
+    username: fields.value[0].value,
+    password: fields.value[1].value,
+  };
+
+  await login(formData.username, formData.password);
+};
 </script>
 
 <style scoped></style>

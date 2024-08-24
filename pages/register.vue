@@ -1,60 +1,43 @@
 <template>
   <div class="w-full min-h-screen flex justify-center items-center">
-    <div class="max-w-md w-full">
+    <div class="max-w-xl w-full">
       <div class="flex justify-center items-center mb-8">
         <Logo class="mr-4" />
         <h1 class="text-3xl font-bold">Mobi-Maternity</h1>
       </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div v-for="field in fields" :key="field.id" class="mb-4">
-          <Label :for="field.id" class="text-lg">{{ field.label }}</Label>
-          <Input
-            v-if="field.type !== 'select'"
-            :id="field.id"
-            :type="
-              field.type === 'password'
-                ? showPassword[field.id]
-                  ? 'text'
-                  : 'password'
-                : field.type
-            "
-            v-model="field.value"
-            :placeholder="field.placeholder"
-            class="w-full"
-          >
-            <template v-if="field.type === 'password'" #append-inner>
-              <button
-                type="button"
-                class="px-2 text-gray-500 hover:text-gray-700"
-                @click="togglePasswordVisibility(field)"
-              >
-                <Icon
-                  :name="
-                    showPassword[field.id] ? 'ph:eye-fill' : 'ph:eye-slash'
-                  "
-                  size="20"
-                />
-              </button>
-            </template>
-          </Input>
-          <Select v-else v-model="field.value">
-            <SelectTrigger>
-              <SelectValue :placeholder="field.placeholder" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup
-                v-for="(option, index) in field.options"
-                :key="index"
-              >
-                <SelectItem :value="option"> {{ option }} </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+      <div
+        class="bg-neutral-100 grid grid-cols-2 gap-4 p-4 rounded-lg shadow"
+        v-if="userRole.length === 0"
+      >
+        <div
+          class="bg-pink-400 rounded-lg p-2 cursor-pointer transition hover:scale-[101%]"
+          @click="setUserRole('Patient')"
+        >
+          <img src="../public/femaleDr.jpg" alt="" class="rounded-full" />
+          <p class="font-bold text-sm text-white text-center">Patient</p>
+        </div>
+        <div
+          class="bg-blue-400 rounded-lg p-2 cursor-pointer transition hover:scale-[101%]"
+          @click="setUserRole('Health Professional')"
+        >
+          <img src="../public/maleDr.jpg" alt="" class="rounded-full" />
+          <p class="font-bold text-sm text-white text-center">
+            Health Professional
+          </p>
         </div>
       </div>
-      <Button class="bg-pink-500 hover:bg-pink-400 w-full mx-auto"
-        >Register</Button
-      >
+      <Tabs defaultValue="personal" v-if="userRole.length > 0">
+        <TabsList>
+          <TabsTrigger value="personal">Personal Information</TabsTrigger>
+          <TabsTrigger value="additional">Additional Information</TabsTrigger>
+        </TabsList>
+        <TabsContent value="personal">
+          <RegisterPersonal />
+        </TabsContent>
+        <TabsContent value="additional">
+          <RegisterAdditional />
+        </TabsContent>
+      </Tabs>
       <span class="block text-center mt-4">
         Have an account?
         <NuxtLink to="/login" class="text-pink-500 hover:underline"
@@ -66,91 +49,18 @@
 </template>
 
 <script setup lang="ts">
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { storeToRefs } from "pinia";
+import { useUser } from "@/stores/useUser";
+const { userRole } = storeToRefs(useUser());
+// const userStore = useUser();
+// const router = useRouter();
 
-interface Field {
-  id: string;
-  label: string;
-  type: string;
-  value: string;
-  placeholder: string;
-  options?: string[];
-}
-
-const fields = ref<Field[]>([
-  {
-    id: "fullName",
-    label: "Full Name",
-    type: "text",
-    value: "",
-    placeholder: "Enter your full name",
-  },
-  {
-    id: "email",
-    label: "Email Address",
-    type: "email",
-    value: "",
-    placeholder: "Enter your email address",
-  },
-  {
-    id: "dateOfBirth",
-    label: "Date of Birth",
-    type: "date",
-    value: "",
-    placeholder: "Select your date of birth",
-  },
-  {
-    id: "gender",
-    label: "Gender",
-    type: "select",
-    value: "",
-    placeholder: "Select your gender",
-    options: ["Male", "Female", "Other"],
-  },
-  {
-    id: "phoneNumber",
-    label: "Phone Number",
-    type: "number",
-    value: "",
-    placeholder: "Enter your phone number",
-  },
-  {
-    id: "password",
-    label: "Password",
-    type: "password",
-    value: "",
-    placeholder: "Enter your password",
-  },
-  {
-    id: "confirmPassword",
-    label: "Confirm Password",
-    type: "password",
-    value: "",
-    placeholder: "Confirm your password",
-  },
-]);
-
-const showPassword = ref({
-  password: false,
-  confirmPassword: false,
-});
-
-const togglePasswordVisibility = (field: Field) => {
-  showPassword.value[field.id] = !showPassword.value[field.id];
-  if (!showPassword.value[field.id]) {
-    field.value = "";
-  }
+// onMounted(async () => {
+//   await getUser();
+// });
+const setUserRole = (role: string) => {
+  userRole.value = role;
 };
 </script>
 
