@@ -13,6 +13,7 @@ defineProps(["cards"]);
 
 <template>
   <Card
+    v-if="cards"
     v-for="(card, index) in cards"
     :key="index"
     v-bind="$attrs"

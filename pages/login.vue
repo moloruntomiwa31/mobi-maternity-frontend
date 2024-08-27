@@ -34,6 +34,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast/use-toast";
+// const router = useRouter();
 const { toast } = useToast();
 const { login } = useAuth();
 
@@ -68,7 +69,13 @@ const handleLogin = async () => {
     password: fields.value[1].value,
   };
 
-  await login(formData.username, formData.password);
+  const isLoginSuccessful = await login(formData.username, formData.password);
+
+  if (isLoginSuccessful) {
+    navigateTo("/overview");
+  } else {
+    console.error("Login failed");
+  }
 };
 </script>
 

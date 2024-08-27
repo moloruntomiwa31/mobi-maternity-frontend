@@ -26,18 +26,9 @@
           </p>
         </div>
       </div>
-      <Tabs defaultValue="personal" v-if="userRole.length > 0">
-        <TabsList>
-          <TabsTrigger value="personal">Personal Information</TabsTrigger>
-          <TabsTrigger value="additional">Additional Information</TabsTrigger>
-        </TabsList>
-        <TabsContent value="personal">
-          <RegisterPersonal />
-        </TabsContent>
-        <TabsContent value="additional">
-          <RegisterAdditional />
-        </TabsContent>
-      </Tabs>
+      <div v-if="userRole.length > 0">
+        <RegisterPersonal />
+      </div>
       <span class="block text-center mt-4">
         Have an account?
         <NuxtLink to="/login" class="text-pink-500 hover:underline"
@@ -49,12 +40,11 @@
 </template>
 
 <script setup lang="ts">
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { storeToRefs } from "pinia";
 import { useUser } from "@/stores/useUser";
 const { userRole } = storeToRefs(useUser());
 // const userStore = useUser();
-// const router = useRouter();
+
 
 // onMounted(async () => {
 //   await getUser();

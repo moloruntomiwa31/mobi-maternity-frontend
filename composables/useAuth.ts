@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { useUser } from "@/stores/useUser";
+
 const { toast } = useToast();
+const router = useRouter();
 
 interface RegisterFormData {
   username: string;
@@ -19,6 +21,7 @@ const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
 
 export function useAuth() {
   const userStore = useUser();
+
   const register = async (formData: RegisterFormData) => {
     try {
       const response = await axios.post(
@@ -30,16 +33,12 @@ export function useAuth() {
           },
         }
       );
-      userStore.setUser(response.data);
-      toast({
-        title: "Success",
-        description: "User registered successfully",
-      });
+      userStore.setUser(response.data.data);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
+      console.log("User registered successfully");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: `${error}`,
-      });
+      console.log(error);
+      router.push("/login");
     }
   };
 
@@ -52,6 +51,7 @@ export function useAuth() {
         description: "User fetched successfully",
       });
     } catch (error) {
+      userStore.clearUser();
       toast({
         title: "Error",
         description: `${error}`,
@@ -60,6 +60,7 @@ export function useAuth() {
   };
 
   const login = async (username: string, password: string) => {
+    console.log(username, password);
     try {
       const response = await axios.post(
         `${url}/api/login/`,
@@ -70,14 +71,37 @@ export function useAuth() {
           },
         }
       );
-      // localStorage.setItem("token", response.data.access);
-      // userStore.setUser(response.data);
+      userStore.setUser(response.data.data);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
       console.log(response.data);
-      toast({
-        title: "Success",
-        description: "User logged in successfully",
-      });
+      return true;
     } catch (error) {
+      userStore.clearUser();
+      toast({
+        title: "Error",
+        description: `${error}`,
+      });
+      return false;
+    }
+  };
+
+  const refreshToken = async () => {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      const response = await axios.post(
+        `${url}/api/token/refresh/`,
+        JSON.stringify({ refresh: refreshToken }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      localStorage.setItem("accessToken", response.data.access);
+    } catch (error) {
+      userStore.clearUser();
       toast({
         title: "Error",
         description: `${error}`,
@@ -85,5 +109,28 @@ export function useAuth() {
     }
   };
 
-  return { register, getUser, login };
+  const logOut = async () => {
+    console.log("Logging out");
+    try {
+      await axios.post(
+        `${url}/api/logout/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            ContentType: "application/json",
+          },
+        }
+      );
+      localStorage.clear();
+      userStore.clearUser();
+      console.log("User logged out successfully");
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  return { register, getUser, login, logOut, refreshToken };
 }

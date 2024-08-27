@@ -2,7 +2,7 @@
   <div class="grid gap-4">
     <header class="flex items-center justify-between">
       <div class="grow">
-        <h1>Hello, Jenny!</h1>
+        <h1>Hello, {{ user?.first_name }}!</h1>
         <p class="text-sm">You'll receive details about your pregnancy here.</p>
       </div>
       <div class="flex items-center justify-between">
@@ -50,7 +50,7 @@
             <h2 class="text-lg font-semibold">Daily Tip😜</h2>
             <p>{{ dailyTip }}</p>
           </div>
-          <OverviewShopping /> 
+          <OverviewShopping />
         </div>
       </div>
     </main>
@@ -63,17 +63,20 @@
 definePageMeta({
   layout: "dashboard",
 });
+import { useUser } from "@/stores/useUser";
+import { storeToRefs } from "pinia";
+const { user } = storeToRefs(useUser());
 import { type Ref, ref } from "vue";
 import {
   type DateValue,
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
-import { Calendar } from "@/components/ui/calendar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-vue-next";
+// import { Calendar } from "@/components/ui/calendar";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import { ChevronRight } from "lucide-vue-next";
 const value = ref(today(getLocalTimeZone())) as Ref<DateValue>;
 
 //weeks
@@ -149,6 +152,5 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style scoped></style>
 
-</style>

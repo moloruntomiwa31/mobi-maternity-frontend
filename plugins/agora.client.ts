@@ -1,9 +1,5 @@
-import AgoraRTC from 'agora-rtc-sdk-ng'
+import AgoraRTC from 'agora-rtc-sdk-ng';
 
 export default defineNuxtPlugin((nuxtApp) => {
-  return {
-    provide: {
-      agora: AgoraRTC
-    }
-  }
-})
+  nuxtApp.provide('agora', AgoraRTC);
+});

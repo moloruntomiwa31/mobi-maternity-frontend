@@ -3,15 +3,14 @@
     <header class="hover:scale-[101%] transition cursor-pointer">
       <div class="flex items-center p-4 gap-2">
         <Logo />
-        <p class="font-bold leading-4">
-          Mobi-Maternity
-        </p>
+        <p class="font-bold leading-4">Mobi-Maternity</p>
       </div>
     </header>
     <div class="grow">
       <div class="grid gap-2 relative">
         <NuxtLink
-          v-for="item in items"
+          v-if="userRole == 'Patient'"
+          v-for="item in patientItems"
           :key="item.title"
           :to="item.path"
           class="px-2 py-1 transition rounded cursor-pointer relative text-white"
@@ -23,13 +22,29 @@
             <span>{{ item.title }}</span>
           </div>
         </NuxtLink>
+        <NuxtLink
+          v-else
+          v-for="item in healthProfessionalItems"
+          :to="item.path"
+          class="px-2 py-1 transition rounded cursor-pointer relative text-white"
+          active-class="text-pink-500 font-bold active-link
+            "
+        >
+          <div class="flex items-center gap-2">
+            <Icon size="20" :name="item.icon" color="black" />
+            <span>{{ item.title }}</span>
+          </div></NuxtLink
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const items = ref([
+import { storeToRefs } from "pinia";
+import { useUser } from "@/stores/useUser";
+const { userRole } = storeToRefs(useUser());
+const patientItems = ref([
   {
     title: "Overview",
     path: "/overview",
@@ -49,6 +64,19 @@ const items = ref([
     title: "Geo-location Tracking",
     path: "/locate",
     icon: "entypo:location",
+  },
+  {
+    title: "Update Health Info",
+    path: "/more-info",
+    icon: "fluent-mdl2:health",
+  },
+]);
+
+const healthProfessionalItems = ref([
+  {
+    title: "Dashboard",
+    path: "/doctor/dashboard",
+    icon: "material-symbols:overview-key-outline",
   },
 ]);
 </script>

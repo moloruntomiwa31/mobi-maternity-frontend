@@ -1,13 +1,27 @@
 import axios from "axios";
 
-export function useAgoraToken() {
-  const fetchToken = async (channelName: string, uid: string | null = null) => {
-    try {
-      const response = await axios.get("/api/agora-token", {
-        params: { channelName, uid },
-      });
+const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
 
-      return response.data.token;
+export function useAgoraToken() {
+  const fetchToken = async (channelName: string, uid: number | null = null) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      };
+
+      const response = await axios.post(
+        `${url}/get-agora-token/`,
+        {
+          channel: channelName,
+          uid,
+        },
+        {
+          headers,
+        }
+      );
+      console.log(response.data);
+      return response.data; 
     } catch (error) {
       console.error("Error fetching Agora token:", error);
       throw new Error("Failed to fetch Agora token");

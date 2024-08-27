@@ -1,18 +1,6 @@
 import { defineStore } from "pinia";
-
-export const useCallStore = defineStore("call", {
-  state: () => ({
-    isCallInitiated: false,
-    calleeId: null,
-  }),
-  actions: {
-    initiateCall(calleeId: string) {
-      this.isCallInitiated = true;
-      this.calleeId = calleeId;
-    },
-    resetCall() {
-      this.isCallInitiated = false;
-      this.calleeId = null;
-    },
-  },
+export const useCallStore = defineStore("call", () => {
+  const channel = ref<string | null>(null);
+  const app_id = ref(null);
+  return { channel, app_id };
 });

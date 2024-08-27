@@ -14,6 +14,7 @@ defineProps({
 
 <template>
   <Carousel
+    v-if="weeks"
     class="relative min-w-[90%] max-w-2xl"
     :opts="{
       align: 'start',

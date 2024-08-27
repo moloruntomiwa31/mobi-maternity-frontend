@@ -29,6 +29,11 @@
       <div class="grid gap-4">
         <h3 class="font-bold text-xl">Available Consultants</h3>
         <div class="grid grid-cols-4 gap-4 place-items-center rounded-lg">
+          <Skeleton
+            v-for="i in 6"
+            class="w-[220px] h-[300px]"
+            v-if="!doctors || doctors?.length === 0"
+          />
           <ConsultantCard :consultants="doctors" />
         </div>
       </div>
@@ -40,60 +45,29 @@
 definePageMeta({
   layout: "dashboard",
 });
+import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
-import femaleDr from "../public/femaleDr.jpg";
-import maleDr from "../public/maleDr.jpg";
 
-interface Doctor {
-  name: string;
-  type: string;
-  image: any;
-  description: string;
-  gender: string;
-}
+const doctors = ref(null);
+const getConsultants = async () => {
+  const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
+  try {
+    const response = await axios.get(`${url}/api/worker-list/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    doctors.value = response.data;
+    console.log(doctors.value);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-const doctors: Doctor[] = [
-  {
-    name: "Dr. Emily Johnson",
-    type: "Pediatrician",
-    image: femaleDr,
-    description:
-      "Dr. Emily Johnson is a board-certified pediatrician with over 10 years of experience in caring for children of all ages.",
-    gender: "Female",
-  },
-  {
-    name: "Dr. Michael Thomas",
-    type: "Obstetrician",
-    image: maleDr,
-    description:
-      "Dr. Michael Thompson is a highly skilled obstetrician specializing in prenatal care, labor and delivery, and postpartum care.",
-    gender: "Male",
-  },
-  {
-    name: "Dr. Sarah Wilson",
-    type: "Pediatrician",
-    image: femaleDr,
-    description:
-      "Dr. Sarah Wilson is a compassionate pediatrician dedicated to providing comprehensive care for infants, children, and adolescents.",
-    gender: "Female",
-  },
-  {
-    name: "Dr. David Lee",
-    type: "Obstetrician",
-    image: maleDr,
-    description:
-      "Dr. David Lee is an experienced obstetrician known for his expertise in high-risk pregnancies and minimally invasive surgical procedures.",
-    gender: "Male",
-  },
-  {
-    name: "Dr. Jessica Davis",
-    type: "Pediatrician",
-    image: femaleDr,
-    description:
-      "Dr. Jessica Davis is a friendly and approachable pediatrician who believes in building strong relationships with families.",
-    gender: "Female",
-  },
-];
+onMounted(async () => {
+  await getConsultants();
+});
 </script>
 
 <style scoped></style>

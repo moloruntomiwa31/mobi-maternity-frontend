@@ -10,8 +10,7 @@
         :placeholder="field.placeholder"
         required
         class="w-full"
-      >
-      </Input>
+      />
       <Select v-else v-model="field.value" required :disabled="field.disabled">
         <SelectTrigger>
           <SelectValue :placeholder="field.placeholder" />
@@ -28,7 +27,7 @@
     <Button
       class="bg-pink-500 hover:bg-pink-400 w-full mx-auto"
       @click="handleSubmit"
-      >Add Data</Button
+      >Register</Button
     >
   </div>
 </template>
@@ -49,9 +48,6 @@ import {
 import { useUser } from "~/stores/useUser";
 const { userRole } = storeToRefs(useUser());
 const { register, getUser } = useAuth();
-// const route = useRoute();
-// const queryUserRole = ref(route.query.userRole as string);
-// console.log(queryUserRole.value);
 
 interface Field {
   id: string;
@@ -78,13 +74,6 @@ const fields = ref<Field[]>([
     value: "",
     placeholder: "Enter your last name",
   },
-  // {
-  //   id: "email",
-  //   label: "Email Address",
-  //   type: "email",
-  //   value: "",
-  //   placeholder: "Enter your email address",
-  // },
   {
     id: "dateOfBirth",
     label: "Date of Birth",
@@ -98,7 +87,8 @@ const fields = ref<Field[]>([
     type: "select",
     value: "",
     placeholder: "Select your gender",
-    options: ["Male", "Female", "Other"],
+    options:
+      userRole.value == "Patient" ? ["Female"] : ["Male", "Female", "Other"],
   },
   {
     id: "role",
@@ -136,7 +126,6 @@ const handleSubmit = async () => {
   const formData = {
     username: "",
     password: "",
-    // email: "",
     first_name: "",
     last_name: "",
     phone_number: "",
@@ -153,15 +142,11 @@ const handleSubmit = async () => {
       case "lastName":
         formData.last_name = field.value;
         break;
-      // case "email":
-      //   formData.email = field.value;
-      //   break;
       case "dateOfBirth":
         formData.date_of_birth = field.value;
         break;
       case "gender":
-        formData.gender =
-          field.value === "Male" ? "M" : "F";
+        formData.gender = field.value === "Male" ? "M" : "F";
         break;
       case "role":
         formData.role = field.value === "Patient" ? "P" : "H";
@@ -183,7 +168,12 @@ const handleSubmit = async () => {
   // Set the desired username
   formData.username = `${formData.first_name.toLowerCase()}${formData.last_name.toLowerCase()}`;
   console.log(formData);
-  await register(formData);
+  try {
+    await register(formData);
+    navigateTo("/more-info");
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 
