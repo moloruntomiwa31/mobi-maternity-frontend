@@ -31,6 +31,7 @@ export function useAuth() {
           },
         }
       );
+      console.log(response)
       userStore.setUser(response.data.data);
       localStorage.setItem("user", JSON.stringify(response.data.data));
       localStorage.setItem("accessToken", response.data.access);
