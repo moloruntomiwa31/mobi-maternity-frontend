@@ -166,7 +166,6 @@ const handleSubmit = async () => {
 
   // Set the desired username
   formData.username = `${formData.first_name.toLowerCase()}${formData.last_name.toLowerCase()}`;
-  console.log(formData);
   try {
     const isRegistered = await register(formData);
     if (isRegistered) {

@@ -31,11 +31,8 @@ export function useAuth() {
           },
         }
       );
-      console.log(response)
-      userStore.setUser(response.data.data);
-      localStorage.setItem("user", JSON.stringify(response.data.data));
-      localStorage.setItem("accessToken", response.data.access);
-      localStorage.setItem("refreshToken", response.data.refresh);      
+      userStore.setUser(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data));
       console.log("User registered successfully");
       return true
     } catch (error) {
