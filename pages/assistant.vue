@@ -6,7 +6,6 @@
         <div class="md:col-span-1 p-4 overflow-y-auto grid gap-4">
           <Button
             class="bg-white hover:bg-neutral-100 rounded-md text-pink-600"
-            @click="startNewChat"
           >
             New Chat
             <PlusCircle class="w-4 h-4" />
@@ -20,7 +19,8 @@
               :key="item.title"
               :to="item.path"
               class="px-2 py-1 transition rounded cursor-pointer relative text-sm"
-              active-class="text-pink-500 font-bold active-link"
+              active-class="text-pink-500 font-bold active-link
+            "
             >
               <div class="flex items-center gap-2">
                 <Icon size="15" :name="item.icon" color="black" />
@@ -39,24 +39,38 @@
       </div>
       <div class="flex-grow overflow-y-auto">
         <div class="h-full overflow-y-auto p-4">
-          <!-- Messages -->
-          <div v-if="messages.length > 0">
-            <AssistantMessages :messages />
+          <!-- Messages will go here -->
+          <div
+            class="bg-gray-100 p-4 rounded-md mb-4"
+            v-if="messages.length > 0"
+          >
+            Message
           </div>
           <div v-else class="flex justify-center items-center">
-            <AssistantDefault />
+            <div
+              class="grid bg-pink-100 place-items-center rounded-xl shadow w-[250px] h-[400px]"
+            >
+              <img
+                src="../public/robo-dr.png"
+                alt="Dr Mobi"
+                class="w-[150px] h-auto"
+              />
+              <p class="text-sm text-center p-4">
+                Hello, I'm Dr. Mobi-Maternity is your 24/7 AI pregnancy
+                companion, offering instant, personalized guidance and reliable
+                medical information throughout your journey to motherhood.
+              </p>
+            </div>
           </div>
         </div>
       </div>
       <div class="bg-pink-100 p-4 flex gap-2 w-full rounded-lg">
         <Input
-          v-model="inputMessage"
           class="flex-grow p-4 rounded-md"
           placeholder="Enter message..."
-          @keyup.enter="sendMessage"
         />
-        <Button @click="sendMessage" :disabled="isLoading">
-          {{ isLoading ? "Sending..." : "Send" }}
+        <Button class="">
+          Send
           <SendIcon class="w-4 h-4" />
         </Button>
       </div>
@@ -64,26 +78,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
-import { SendIcon, PlusCircle } from "lucide-vue-next";
+<script setup>
+import { ChevronRight } from "lucide-vue-next";
+import { SendIcon } from "lucide-vue-next";
+import { PlusCircle } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
-import { useAWS } from "@/composables/useAWS";
-
 definePageMeta({
   layout: "ai-assistant",
 });
-
-interface Message {
-  content: string;
-  isUser: boolean;
-}
-
-const { getResponse } = useAWS();
-
-const messages = ref<Message[]>([]);
-const inputMessage = ref("");
-const isLoading = ref(false);
+const messages = ref([]);
 
 const items = ref([
   {
@@ -102,51 +105,9 @@ const items = ref([
     icon: "game-icons:doctor-face",
   },
   {
-    title: "Nearby Hospitals",  
+    title: "Geo-location Tracking",
     path: "/locate",
     icon: "entypo:location",
   },
-  {
-    title: "Update Health Info",
-    path: "/more-info",
-    icon: "fluent-mdl2:health",
-  },
 ]);
-
-const sendMessage = async () => {
-  if (!inputMessage.value.trim()) return;
-
-  const userMessage: Message = {
-    content: inputMessage.value,
-    isUser: true,
-  };
-  messages.value.push(userMessage);
-
-  isLoading.value = true;
-  try {
-    const response = await getResponse(inputMessage.value);
-    const aiMessage: Message = {
-      content: response?.data.response,
-      isUser: false,
-    };
-    messages.value.push(aiMessage);
-  } catch (error) {
-    console.error("Error sending message:", error);
-    messages.value.push({
-      content: "Sorry, I didn't get that.",
-      isUser: false,
-    });
-  } finally {
-    isLoading.value = false;
-    inputMessage.value = "";
-  }
-};
-
-const startNewChat = () => {
-  messages.value = [];
-  inputMessage.value = "";
-};
 </script>
-
-<style scoped>
-</style>

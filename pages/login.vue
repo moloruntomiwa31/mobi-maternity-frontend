@@ -34,8 +34,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/toast/use-toast";
-
-const { userRole } = storeToRefs(useUser());
 // const router = useRouter();
 const { toast } = useToast();
 const { login } = useAuth();
@@ -74,9 +72,7 @@ const handleLogin = async () => {
   const isLoginSuccessful = await login(formData.username, formData.password);
 
   if (isLoginSuccessful) {
-    userRole.value == "Patient"
-      ? navigateTo("/overview")
-      : navigateTo("/doctor/dashboard");
+    navigateTo("/overview");
   } else {
     console.error("Login failed");
   }

@@ -10,8 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.17.1",
     "@nuxt/icon": "^1.4.7",
+    "@nuxtjs/leaflet": "^1.2.2",
     "@pinia/nuxt": "^0.5.4",
     "@unovis/ts": "^1.4.3-beta.0",
     "@unovis/vue": "^1.4.3-beta.0",

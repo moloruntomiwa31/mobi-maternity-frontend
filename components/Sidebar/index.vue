@@ -53,12 +53,11 @@
 <script setup lang="ts">
 import { LogOut } from "lucide-vue-next";
 const { logOut } = useAuth();
-const router = useRouter();
 const handleLogOut = async () => {
   const isLogOutSuccessful = await logOut();
 
   if (isLogOutSuccessful) {
-    router.push("/login");
+    navigateTo("/login");
   } else {
     console.log("Logout failed");
   }

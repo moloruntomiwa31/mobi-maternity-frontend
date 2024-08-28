@@ -1,20 +1,14 @@
 <script setup lang="ts">
 import {
   Card,
+  CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
 defineProps(["cards"]);
-const getRandomLightColor = () => {
-  const letters = "89ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * letters.length)];
-  }
-  return color;
-};
 </script>
 
 <template>
@@ -23,11 +17,13 @@ const getRandomLightColor = () => {
     v-for="(card, index) in cards"
     :key="index"
     v-bind="$attrs"
-    :style="{ backgroundColor: getRandomLightColor() }"
+    :style="{ backgroundColor: card.bgColor }"
   >
     <CardHeader>
       <CardTitle>{{ card.title }}</CardTitle>
-      <CardDescription>{{ card.content }}</CardDescription>
+      <CardDescription>{{ card.description }}</CardDescription>
     </CardHeader>
+    <CardContent v-if="card.content"> Card Content </CardContent>
+    <CardFooter v-if="card.footer"> Card Footer </CardFooter>
   </Card>
 </template>

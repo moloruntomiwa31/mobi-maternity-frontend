@@ -8,9 +8,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@nuxt/icon",
+    "@nuxtjs/leaflet",
     "@pinia/nuxt",
   ],
-  pinia: {
-    storesDirs: ["./stores/**", "./custom-folder/stores/**"],
-  },
 });

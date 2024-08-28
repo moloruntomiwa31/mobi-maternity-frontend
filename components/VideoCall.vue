@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
 const { $agora } = useNuxtApp();
-const { channel, app_id, token, uid } = storeToRefs(useCallStore());
 
 const localVideoRef = ref(null);
 const remoteVideoRef = ref(null);
@@ -13,7 +14,6 @@ const isVideoMuted = ref(false);
 const isAudioMuted = ref(false);
 
 defineProps(["consultant"]);
-const emit  = defineEmits(["call-ended"]);
 
 const toggleVideo = () => {
   if (localVideoTrack.value) {
@@ -46,7 +46,6 @@ const leaveCall = async () => {
     if (localAudioTrack.value) localAudioTrack.value.close();
     if (remoteUser.value?.videoTrack) remoteUser.value.videoTrack.close();
   }
-emit("call-ended");
 };
 
 onMounted(async () => {
@@ -60,7 +59,7 @@ onMounted(async () => {
     localVideoTrack.value.play(localVideoRef.value);
 
     // Join the channel (assuming token and other necessary details are handled elsewhere)
-    await client.value.join(app_id.value, channel.value, token.value, uid.value);
+    await client.value.join(appId, channelName, token, uid);
 
     // Publish the local video and audio tracks
     await client.value.publish([localVideoTrack.value, localAudioTrack.value]);
@@ -93,7 +92,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="absolute">
+  <div class="bg-red-500 absolute">
     <h2 class="text-center mb-4">
       Call with Dr. {{ consultant.user_registration.first_name }}
     </h2>

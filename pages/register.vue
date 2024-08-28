@@ -40,8 +40,15 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useUser } from "@/stores/useUser";
 const { userRole } = storeToRefs(useUser());
+// const userStore = useUser();
 
+
+// onMounted(async () => {
+//   await getUser();
+// });
 const setUserRole = (role: string) => {
   userRole.value = role;
 };
