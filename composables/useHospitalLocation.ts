@@ -1,5 +1,5 @@
 import axios from "axios";
-const GEOAPIFY_API_KEY = "3e798e21fa44436cbb10e4dddbb69199";
+const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_API_KEY as string;
 
 export function useHospitalLocation() {
   const getHospitalDetails = async () => {

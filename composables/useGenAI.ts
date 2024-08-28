@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI("AIzaSyDroWJijewBrqWAVmNWYE7dS1FvRKXKeZg");
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GENERATIVE_AI_API_KEY as string);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
