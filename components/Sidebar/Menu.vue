@@ -41,8 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useUser } from "@/stores/useUser";
 const { userRole } = storeToRefs(useUser());
 const patientItems = ref([
   {
@@ -61,7 +59,7 @@ const patientItems = ref([
     icon: "game-icons:doctor-face",
   },
   {
-    title: "Geo-location Tracking",
+    title: "Nearby Hospitals",
     path: "/locate",
     icon: "entypo:location",
   },

@@ -8,8 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useUser } from "@/stores/useUser";
 const { user } = storeToRefs(useUser());
 </script>
 

@@ -45,7 +45,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUser } from "~/stores/useUser";
 const { userRole } = storeToRefs(useUser());
 const { register, getUser } = useAuth();
 

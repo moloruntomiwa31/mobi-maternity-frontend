@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { useUser } from "@/stores/useUser";
 
 const { toast } = useToast();
 const router = useRouter();

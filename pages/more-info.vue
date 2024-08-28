@@ -80,9 +80,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { storeToRefs } from "pinia";
-import { useUser } from "@/stores/useUser";
-import { useUserInfo } from "@/composables/useUserInfo";
 
 const { userRole } = storeToRefs(useUser());
 const { addPatientInfo, addHealthWorkerInfo } = useUserInfo();
