@@ -81,6 +81,13 @@ const fields = ref<Field[]>([
     placeholder: "Select your date of birth",
   },
   {
+    id: "username",
+    label: "Username",
+    type: "text",
+    value: "",
+    placeholder: "Enter your username",
+  },
+  {
     id: "gender",
     label: "Gender",
     type: "select",
@@ -159,13 +166,14 @@ const handleSubmit = async () => {
       case "confirmPassword":
         // You can add validation logic here
         break;
+      case "username":
+        formData.username = field.value;
       default:
         break;
     }
   });
 
   // Set the desired username
-  formData.username = `${formData.first_name.toLowerCase()}${formData.last_name.toLowerCase()}`;
   try {
     const isRegistered = await register(formData);
     if (isRegistered) {
