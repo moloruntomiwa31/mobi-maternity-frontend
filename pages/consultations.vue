@@ -50,7 +50,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const doctors = ref(null);
 const getConsultants = async () => {
-  const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
+  const url = "https://mobi-maternity-db.onrender.com";
   try {
     const response = await axios.get(`${url}/api/worker-list/`, {
       headers: {

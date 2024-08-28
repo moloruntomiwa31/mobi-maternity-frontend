@@ -2,7 +2,7 @@ import axios from "axios";
 import { useToast } from "@/components/ui/toast/use-toast";
 const { toast } = useToast();
 
-const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
+const url = "https://mobi-maternity-db.onrender.com";
 
 export function useUserInfo() {
   const userStore = useUser();

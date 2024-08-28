@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
+const url = "https://mobi-maternity-db.onrender.com";
 
 export function useAgoraToken() {
   const fetchToken = async (

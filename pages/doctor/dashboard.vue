@@ -28,7 +28,7 @@ const isMuted = ref(false);
 const isVideoMuted = ref(false);
 const pollingInterval = ref(null);
 const patientName = ref("");
-const url = "https://q60kw2bx-8002.euw.devtunnels.ms";
+const url = "https://mobi-maternity-db.onrender.com";
 
 // Fetch Call Information
 const fetchCallInfo = async () => {
