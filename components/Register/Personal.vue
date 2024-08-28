@@ -168,8 +168,10 @@ const handleSubmit = async () => {
   formData.username = `${formData.first_name.toLowerCase()}${formData.last_name.toLowerCase()}`;
   console.log(formData);
   try {
-    await register(formData);
-    navigateTo("/more-info");
+    const isRegistered = await register(formData);
+    if (isRegistered) {
+      navigateTo("/overview");
+    }
   } catch (error) {
     console.log(error);
   }

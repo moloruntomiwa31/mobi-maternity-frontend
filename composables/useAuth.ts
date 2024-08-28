@@ -7,7 +7,6 @@ const router = useRouter();
 interface RegisterFormData {
   username: string;
   password: string;
-  email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -34,10 +33,14 @@ export function useAuth() {
       );
       userStore.setUser(response.data.data);
       localStorage.setItem("user", JSON.stringify(response.data.data));
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);      
       console.log("User registered successfully");
+      return true
     } catch (error) {
       console.log(error);
       router.push("/login");
+      return false
     }
   };
 
@@ -59,7 +62,6 @@ export function useAuth() {
   };
 
   const login = async (username: string, password: string) => {
-    console.log(username, password);
     try {
       const response = await axios.post(
         `${url}/api/login/`,
@@ -109,7 +111,6 @@ export function useAuth() {
   };
 
   const logOut = async () => {
-    console.log("Logging out");
     try {
       await axios.post(
         `${url}/api/logout/`,
