@@ -28,20 +28,18 @@
       </div>
       <div class="flex gap-4 items-start">
         <div class="w-3/5">
-          <div class="flex items-center justify-between w-3/5 mb-6">
-            <div
-              class="bg-pink-200 w-14 h-14 text-center rounded-full p-2 flex items-center justify-center"
-            >
-              <Icon
-                name="icon-park-outline:baby-one"
-                size="30"
-                class="text-pink-500"
-              />
-            </div>
-            <p>Your baby is like the size of a pear</p>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4" v-if="setPrompts">
             <BabyDetailsCard :cards class="border-0 shadow-none p-0" />
+          </div>
+          <div class="grid gap-4" v-else>
+            <h3 class="text-lg font-bold">Let's help you get a few info on your baby.</h3>
+            <div class="grid gap-2" v-for="field in fields" :key="field.label">
+              <Label class="text-base font-medium">{{ field.label }}</Label>
+              <Input v-model="field.value" :placeholder="field.placeholder" />
+            </div>
+            <Button @click="getDetails" :disabled="isLoading">{{
+              isLoading ? "Sending..." : "Send"
+            }}</Button>
           </div>
         </div>
         <!-- other -->
@@ -63,22 +61,70 @@
 definePageMeta({
   layout: "dashboard",
 });
-import { useUser } from "@/stores/useUser";
-import { storeToRefs } from "pinia";
 const { user } = storeToRefs(useUser());
-import { type Ref, ref } from "vue";
-import {
-  type DateValue,
-  getLocalTimeZone,
-  today,
-} from "@internationalized/date";
-// import { Calendar } from "@/components/ui/calendar";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import { ChevronRight } from "lucide-vue-next";
-const value = ref(today(getLocalTimeZone())) as Ref<DateValue>;
+import { Input } from "@/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Button } from "@/components/ui/button";
+const setPrompts = ref(false);
+const isLoading = ref(false);
+//cards
+const cards = ref(null);
 
+const { generatePrenatalInfoPrompt, getBabyDetails } = useGenAI();
+
+//fields
+const fields = ref([
+  {
+    label: "Gestation Age",
+    value: "",
+    placeholder: "Please let us know",
+  },
+  {
+    label: "Baby's Gender",
+    value: "",
+    placeholder: "Please let us know",
+  },
+  {
+    label: "Multiple Pregnancy",
+    value: "",
+    placeholder: "Please let us know",
+  },
+]);
+
+const getDetails = async () => {
+  const prenatalInfo = {
+    gestationalAge: "",
+    gender: "",
+    multiplePregnancy: "",
+  };
+
+  fields.value.forEach((field) => {
+    switch (field.label) {
+      case "Gestation Age":
+        prenatalInfo.gestationalAge = field.value;
+        field.value = "";
+        break;
+      case "Baby's Gender":
+        prenatalInfo.gender = field.value;
+        field.value = "";
+        break;
+      case "Multiple Pregnancy":
+        prenatalInfo.multiplePregnancy = field.value;
+        field.value = "";
+        break;
+      default:
+        break;
+    }
+  });
+
+  //actions
+  isLoading.value = true;
+  const prompt = generatePrenatalInfoPrompt(prenatalInfo);
+  const babyDetails = await getBabyDetails(prompt);
+  cards.value = babyDetails;
+  setPrompts.value = true;
+  isLoading.value = false;
+};
 //weeks
 const weeks = ref([]);
 
@@ -102,30 +148,6 @@ function generateWeeks() {
     weeks.value.push(week);
   }
 }
-
-//cards
-const cards = ref([
-  {
-    title: "Baby's Height",
-    description: "12.5 cm",
-    bgColor: "#FFF5E6",
-  },
-  {
-    title: "Baby's Weight",
-    description: "119grams",
-    bgColor: "#E6F5FF",
-  },
-  {
-    title: "Baby's Development",
-    description: "Baby's eyes are now fully formed.",
-    bgColor: "#E6FFE6",
-  },
-  {
-    title: "Days Left",
-    description: "168 days",
-    bgColor: "#FFE6E6",
-  },
-]);
 
 //daily tip
 const dailyTip = ref("");
@@ -153,4 +175,3 @@ onMounted(() => {
 </script>
 
 <style scoped></style>
-

@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import { VideotapeIcon } from "lucide-vue-next";
 import femaleDr from "../public/femaleDr.jpg";
 import maleDr from "../public/maleDr.jpg";
-import { useCallStore } from "~/stores/useCallStore";
-import { storeToRefs } from "pinia";
-const {channel, app_id} = storeToRefs(useCallStore());  
+const {channel, app_id, token, uid} = storeToRefs(useCallStore());  
 //created store for channel and app_id
 
 defineProps(["consultants"]);
@@ -29,17 +27,17 @@ const generateChannelName = () => {
 
 const startCall = async (consultant) => {
   channel.value = generateChannelName();
-  let uid = generateUid();
-  console.log("Starting call with channel:", channel, "and UID:", uid);
+  uid.value = generateUid();
+  console.log("Starting call with channel:", channel, "and UID:", uid.value);
   try {
-    const tokenResponse = await fetchToken(channel.value, uid);
-    const token = tokenResponse.token;
+    const tokenResponse = await fetchToken(channel.value, uid.value, consultant.user_registration.id);  
+    token.value = tokenResponse.token;
     app_id.value = tokenResponse.app_id;
 
     const client = $agora?.createClient({ mode: "rtc", codec: "vp8" });
 
     if (client) {
-      await client.join(app_id.value, channel.value, token, uid);
+      await client.join(app_id.value, channel.value, token.value, uid.value);
       isCallActive.value = true;
       activeConsultant.value = consultant;
 
@@ -94,6 +92,6 @@ const startCall = async (consultant) => {
 
   <div v-else>
     <!-- Display Video Call Component when a call is active -->
-    <VideoCall :consultant="activeConsultant" />
+    <VideoCall :consultant="activeConsultant" @call-ended="isCallActive = false" />
   </div>
 </template>
